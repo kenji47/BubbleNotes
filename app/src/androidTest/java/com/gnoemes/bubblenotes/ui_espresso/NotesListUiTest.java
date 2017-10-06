@@ -180,9 +180,5 @@ public class NotesListUiTest {
         //check empty adapter is showing
         onView(withId(R.id.emptyAdapterTextView)).check(matches(isDisplayed()));
     }
-
-    @Test
-    public void deleteNewNote_ShouldAddNoteToList() throws Exception{
-
-    }
+    
 }
