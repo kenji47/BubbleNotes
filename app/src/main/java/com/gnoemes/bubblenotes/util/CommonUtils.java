@@ -20,7 +20,7 @@ public class CommonUtils {
 
     public static void longOperation() {
         try {
-            for (int i = 1; i < 3; i++) {
+            for (int i = 1; i < 6; i++) {
                 Timber.d("Sleep " + i);
                 TimeUnit.SECONDS.sleep(1);
             }

@@ -5,6 +5,7 @@ import com.arellomobile.mvp.MvpPresenter;
 import com.gnoemes.bubblenotes.repo.local.LocalRepository;
 import com.gnoemes.bubblenotes.repo.model.Note;
 import com.gnoemes.bubblenotes.repo.model.Note_;
+import com.gnoemes.bubblenotes.util.CommonUtils;
 import com.gnoemes.bubblenotes.util.EspressoIdlingResource;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class NotesListPresenter extends MvpPresenter<NotesListView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
+        Timber.d("onFirstViewAttach");
 
         loadNotesAndObserve();
         observeNoteForeignChangesStatus();
@@ -85,25 +87,29 @@ public class NotesListPresenter extends MvpPresenter<NotesListView> {
     }
 
     private Observable<List<Note>> observeNotes() {
-        return localRepository.getAllNotesSorted(Note_.unixTime);
+        return localRepository.getAllNotesSorted(Note_.unixTime)
+                .map(notes -> {
+                    CommonUtils.longOperation();
+                    return notes;
+                });
+
     }
 
     private void loadNotesAndObserve() {
         EspressoIdlingResource.increment();
-        disposableNotes = Observable.merge(observeComments(), observeDescriptions(), observeNotes())
+
+        disposableNotes = Observable.merge(observeNotes(), observeComments(), observeDescriptions())
                 .observeOn(main)
                 .subscribe(notes -> {
                             Timber.d("loadNotesAndObserve onNext");
-                            if (!EspressoIdlingResource.getIdlingResource().isIdleNow())
-                                EspressoIdlingResource.decrement();
+                            EspressoIdlingResource.decrement();
 
                             getViewState().setNotesList(notes);
                             receiveNoteForeignChanges = true;
 
                         }, throwable -> {
                             throwable.printStackTrace();
-                            if (!EspressoIdlingResource.getIdlingResource().isIdleNow())
-                                EspressoIdlingResource.decrement();
+                            EspressoIdlingResource.decrement();
                         },
                         () -> {
                             Timber.d("onComplete");
@@ -115,8 +121,11 @@ public class NotesListPresenter extends MvpPresenter<NotesListView> {
                 .observeOn(main)
                 .subscribe(aBoolean -> {
                     receiveNoteForeignChanges = aBoolean;
-                }, throwable -> {Timber.d("observeNoteForeignChangesStatus onError " + throwable);
-                }, () -> {Timber.d("observeNoteForeignChangesStatus onComplete");});
+                }, throwable -> {
+                    Timber.d("observeNoteForeignChangesStatus onError " + throwable);
+                }, () -> {
+                    Timber.d("observeNoteForeignChangesStatus onComplete");
+                });
     }
 
 

@@ -4,6 +4,7 @@ import com.gnoemes.bubblenotes.repo.model.Comment;
 import com.gnoemes.bubblenotes.repo.model.Description;
 import com.gnoemes.bubblenotes.repo.model.Note;
 import com.gnoemes.bubblenotes.repo.model.Note_;
+import com.gnoemes.bubblenotes.util.CommonUtils;
 
 import java.util.List;
 
@@ -49,17 +50,26 @@ public class LocalRepositoryImpl implements LocalRepository {
 
     @Override
     public Observable<Boolean> observeNoteForeignChangesStatus() {
+        //Timber.d("observeNoteForeignChangesStatus");
         return subjectNoteForeignChangesStatus;
     }
 
     @Override
     public Observable<List<Comment>> getAllComments() {
+        Timber.d("getAllComments");
+        //Timber.d("Thread: " + Thread.currentThread().getName());
+        //CommonUtils.longOperation();
+
         Query<Comment> commentQuery = commentBox.query().build();
         return RxQuery.observable(commentQuery);
     }
 
     @Override
     public Observable<List<Description>> getAllDescription() {
+        Timber.d("getAllDescription");
+        //Timber.d("Thread: " + Thread.currentThread().getName());
+        //CommonUtils.longOperation();
+
         Query<Description> descriptionQuery = descriptionBox.query().build();
         return RxQuery.observable(descriptionQuery);
     }
@@ -67,7 +77,9 @@ public class LocalRepositoryImpl implements LocalRepository {
     @Override
     public Observable<List<Note>> getAllNotesSorted(Property property) {
         Timber.d("getAllNotesSorted");
+        //Timber.d("Thread: " + Thread.currentThread().getName());
         //CommonUtils.longOperation();
+
         Query<Note> query = noteBox.query()
                 .orderDesc(property)
                 .eager(Note_.description, Note_.comments)
@@ -77,7 +89,10 @@ public class LocalRepositoryImpl implements LocalRepository {
 
     @Override
     public List<Note> getAllNotesSortedList(Property property) {
-        Timber.d("getAllNotesSorted");
+        Timber.d("getAllNotesSortedList");
+        Timber.d("Thread: " + Thread.currentThread().getName());
+        CommonUtils.longOperation();
+
         Query<Note> query = noteBox.query()
                 .orderDesc(property)
                 .eager(Note_.description, Note_.comments)
@@ -90,7 +105,10 @@ public class LocalRepositoryImpl implements LocalRepository {
     public Observable<Note> getNote(long id) {
         Timber.d("getNote");
         return Observable.<Note>fromCallable(() -> {
-            //CommonUtils.longOperation();
+
+            Timber.d("Thread: " + Thread.currentThread().getName());
+            CommonUtils.longOperation();
+
             return noteBox.get(id);});
     }
 
@@ -100,7 +118,10 @@ public class LocalRepositoryImpl implements LocalRepository {
         Timber.d("addNote");
         subjectNoteForeignChangesStatus.onNext(false);
         return Observable.fromCallable(() -> {
-            //CommonUtils.longOperation();
+
+            Timber.d("Thread: " + Thread.currentThread().getName());
+            CommonUtils.longOperation();
+
             return noteBox.put(note);
         });
     }
@@ -117,7 +138,10 @@ public class LocalRepositoryImpl implements LocalRepository {
         Timber.d("UpdateNote");
         subjectNoteForeignChangesStatus.onNext(false);
         return Observable.fromCallable(() -> {
-            //CommonUtils.longOperation();
+
+            Timber.d("Thread: " + Thread.currentThread().getName());
+            CommonUtils.longOperation();
+
             boxStore.runInTx(() -> {
 
                 //явное сохранение изменений в дочерней сущности
@@ -143,7 +167,10 @@ public class LocalRepositoryImpl implements LocalRepository {
         Timber.d("deleteNote");
         subjectNoteForeignChangesStatus.onNext(false);
         return Observable.fromCallable(() -> {
-            //CommonUtils.longOperation();
+
+            Timber.d("Thread: " + Thread.currentThread().getName());
+            CommonUtils.longOperation();
+
             boxStore.runInTx(() -> {
                 Note note = noteBox.get(id);
 

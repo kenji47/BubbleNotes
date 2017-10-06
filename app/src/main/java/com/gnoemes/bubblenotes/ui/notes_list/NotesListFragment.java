@@ -91,6 +91,7 @@ public class NotesListFragment extends MvpAppCompatFragment implements NotesList
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Timber.d("onCreateView");
         View view = inflater.inflate(R.layout.fragment_notes_list, container, false);
         ButterKnife.bind(this, view);
 
@@ -183,6 +184,7 @@ public class NotesListFragment extends MvpAppCompatFragment implements NotesList
     }
 
     private void initToolbar() {
+        Timber.d("initToolbar");
         toolbar.setTitle("Notes list");
         AppCompatActivity activity = (AppCompatActivity)getActivity();
         activity.setSupportActionBar(toolbar);
@@ -190,6 +192,7 @@ public class NotesListFragment extends MvpAppCompatFragment implements NotesList
     }
 
     private void syncToolbarWithDrawer() {
+        Timber.d("syncToolbarWithDrawer");
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 getActivity(), drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer_layout.addDrawerListener(toggle);

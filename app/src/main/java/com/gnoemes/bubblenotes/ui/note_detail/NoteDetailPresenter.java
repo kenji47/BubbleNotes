@@ -38,14 +38,17 @@ public class NoteDetailPresenter extends MvpPresenter<NoteDetailView> {
 
     public void getNote(long id) {
         Timber.d("getNote");
+        EspressoIdlingResource.increment();
         localRepositoryBox.getNote(id)
                 .subscribeOn(io)
                 .observeOn(main)
                 .subscribe(note -> {
                     getViewState().setNote(note);
+                    EspressoIdlingResource.decrement();
                 }, throwable -> {
                     getViewState().showToast("Error " + throwable);
                     throwable.printStackTrace();
+                    EspressoIdlingResource.decrement();
                 });
     }
 
@@ -68,27 +71,32 @@ public class NoteDetailPresenter extends MvpPresenter<NoteDetailView> {
     }
 
     public void updateNote(Note note) {
+        EspressoIdlingResource.increment();
         localRepositoryBox.UpdateNote(note)
                 .subscribeOn(io)
                 .observeOn(main)
                 .subscribe(id -> {
                     Timber.d("UpdateNote onNext");
+                    EspressoIdlingResource.decrement();
                     getViewState().showToast("Note updated " + id);
                     getViewState().backPressed();
                 }, throwable -> {
+                    EspressoIdlingResource.decrement();
                     Timber.d("UpdateNote onError " + throwable);
                 }, () -> {});
     }
 
     public void deleteNote(long id) {
+        EspressoIdlingResource.increment();
         localRepositoryBox.deleteNote(id)
                 .subscribeOn(io)
                 .observeOn(main)
                 .subscribe(aBoolean -> {
+                    EspressoIdlingResource.decrement();
                     getViewState().showToast("Note deleted " + id);
                     getViewState().backPressed();
                 }, throwable -> {
-
+                    EspressoIdlingResource.decrement();
                 }, () -> {
 
                 });

@@ -31,7 +31,8 @@ public class EspressoIdlingResource {
     }
 
     public static void decrement() {
-        mCountingIdlingResource.decrement();
+        if (!getIdlingResource().isIdleNow())
+            mCountingIdlingResource.decrement();
     }
 
     public static IdlingResource getIdlingResource() {
