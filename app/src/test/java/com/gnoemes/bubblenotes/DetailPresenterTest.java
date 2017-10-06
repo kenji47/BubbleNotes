@@ -33,6 +33,8 @@ public class DetailPresenterTest {
     private NoteDetailView$$State viewState;
     @Mock
     LocalRepositoryImpl localRepositoryBox;
+
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
