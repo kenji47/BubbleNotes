@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -51,14 +54,13 @@ import timber.log.Timber;
 public class NotesListFragment extends MvpAppCompatFragment implements NotesListView {
     public static final String TAG = NotesListFragment.class.getSimpleName();
 
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
-    @BindView(R.id.listRecyclerView)
-    RecyclerView listRecyclerView;
+    @BindView(R.id.addNoteFab) FloatingActionButton addNoteFab;
+    @BindView(R.id.listRecyclerView) RecyclerView listRecyclerView;
     DrawerLayout drawer_layout;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.loadNotesProgressBar) ProgressBar loadNotesProgressBar;
+    @BindView(R.id.emptyAdapterTextView)
+    TextView emptyAdapterTextView;
     @InjectPresenter
     NotesListPresenter presenter;
 
@@ -95,7 +97,7 @@ public class NotesListFragment extends MvpAppCompatFragment implements NotesList
         View view = inflater.inflate(R.layout.fragment_notes_list, container, false);
         ButterKnife.bind(this, view);
 
-        fab.setOnClickListener(view1 -> {
+        addNoteFab.setOnClickListener(view1 -> {
             Intent intent = new Intent(getActivity(), NoteDetailActivity.class);
             startActivity(intent);
         });
@@ -211,6 +213,11 @@ public class NotesListFragment extends MvpAppCompatFragment implements NotesList
     public void setNotesList(List<Note> notes) {
         Timber.d("setNotesList");
         this.notes = notes;
+        if (notes.size() == 0) {
+            emptyAdapterTextView.setVisibility(View.VISIBLE);
+        } else {
+            emptyAdapterTextView.setVisibility(View.INVISIBLE);
+        }
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new NotesDiff(notes, adapterRecycler.getData()));
         adapterRecycler.updateData(notes);
         diffResult.dispatchUpdatesTo(adapterRecycler);
@@ -220,5 +227,13 @@ public class NotesListFragment extends MvpAppCompatFragment implements NotesList
     @Override
     public void showMessage(String msg) {
         Timber.d("showMessage " + msg);
+    }
+
+    @Override
+    public void setProgressIndicator(boolean refreshing) {
+        if (refreshing)
+            loadNotesProgressBar.setVisibility(View.VISIBLE);
+        else
+            loadNotesProgressBar.setVisibility(View.INVISIBLE);
     }
 }

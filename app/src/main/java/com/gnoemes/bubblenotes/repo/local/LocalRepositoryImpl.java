@@ -57,9 +57,6 @@ public class LocalRepositoryImpl implements LocalRepository {
     @Override
     public Observable<List<Comment>> getAllComments() {
         Timber.d("getAllComments");
-        //Timber.d("Thread: " + Thread.currentThread().getName());
-        //CommonUtils.longOperation();
-
         Query<Comment> commentQuery = commentBox.query().build();
         return RxQuery.observable(commentQuery);
     }
@@ -67,9 +64,6 @@ public class LocalRepositoryImpl implements LocalRepository {
     @Override
     public Observable<List<Description>> getAllDescription() {
         Timber.d("getAllDescription");
-        //Timber.d("Thread: " + Thread.currentThread().getName());
-        //CommonUtils.longOperation();
-
         Query<Description> descriptionQuery = descriptionBox.query().build();
         return RxQuery.observable(descriptionQuery);
     }
@@ -77,9 +71,6 @@ public class LocalRepositoryImpl implements LocalRepository {
     @Override
     public Observable<List<Note>> getAllNotesSorted(Property property) {
         Timber.d("getAllNotesSorted");
-        //Timber.d("Thread: " + Thread.currentThread().getName());
-        //CommonUtils.longOperation();
-
         Query<Note> query = noteBox.query()
                 .orderDesc(property)
                 .eager(Note_.description, Note_.comments)

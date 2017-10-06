@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 
 public class WeatherFragment extends Fragment{
     public static final String TAG = WeatherFragment.class.getSimpleName();
-    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.addNoteFab) FloatingActionButton fab;
     @BindView(R.id.listRecyclerView) RecyclerView listRecyclerView;
     DrawerLayout drawer_layout;
     @BindView(R.id.toolbar) Toolbar toolbar;

@@ -5,8 +5,7 @@ import com.arellomobile.mvp.MvpPresenter;
 import com.gnoemes.bubblenotes.repo.local.LocalRepository;
 import com.gnoemes.bubblenotes.repo.model.Note;
 import com.gnoemes.bubblenotes.repo.model.Note_;
-import com.gnoemes.bubblenotes.util.CommonUtils;
-import com.gnoemes.bubblenotes.util.EspressoIdlingResource;
+
 
 import java.util.List;
 
@@ -47,6 +46,7 @@ public class NotesListPresenter extends MvpPresenter<NotesListView> {
         super.onFirstViewAttach();
         Timber.d("onFirstViewAttach");
 
+        getViewState().setProgressIndicator(true);
         loadNotesAndObserve();
         observeNoteForeignChangesStatus();
 
@@ -89,27 +89,25 @@ public class NotesListPresenter extends MvpPresenter<NotesListView> {
     private Observable<List<Note>> observeNotes() {
         return localRepository.getAllNotesSorted(Note_.unixTime)
                 .map(notes -> {
-                    CommonUtils.longOperation();
+                    //CommonUtils.longOperation();
                     return notes;
                 });
 
     }
 
     private void loadNotesAndObserve() {
-        EspressoIdlingResource.increment();
-
         disposableNotes = Observable.merge(observeNotes(), observeComments(), observeDescriptions())
                 .observeOn(main)
                 .subscribe(notes -> {
                             Timber.d("loadNotesAndObserve onNext");
-                            EspressoIdlingResource.decrement();
 
                             getViewState().setNotesList(notes);
                             receiveNoteForeignChanges = true;
+                            getViewState().setProgressIndicator(false);
 
                         }, throwable -> {
                             throwable.printStackTrace();
-                            EspressoIdlingResource.decrement();
+                            getViewState().setProgressIndicator(false);
                         },
                         () -> {
                             Timber.d("onComplete");

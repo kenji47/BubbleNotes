@@ -1,7 +1,9 @@
 package com.gnoemes.bubblenotes;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
 
 
 import com.gnoemes.bubblenotes.repo.model.Comment;
@@ -18,8 +20,9 @@ import timber.log.Timber;
  * Created by kenji1947 on 24.09.2017.
  */
 
-public class App extends Application {
+public class App extends Application implements Application.ActivityLifecycleCallbacks{
     private Context context;
+    private Activity currentActivity;
     private BoxStore boxStore;
 
     private Box<Note> noteBox;
@@ -35,6 +38,7 @@ public class App extends Application {
             new AndroidObjectBrowser(boxStore).start(this);
             Timber.plant(new Timber.DebugTree());
         }
+        registerActivityLifecycleCallbacks(this);
         context = this;
     }
 
@@ -54,6 +58,46 @@ public class App extends Application {
 
     public BoxStore getBoxStore() {
         return boxStore;
+    }
+
+
+    @Override
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        currentActivity = activity;
+    }
+
+    @Override
+    public void onActivityStarted(Activity activity) {
+        currentActivity = activity;
+    }
+
+    @Override
+    public void onActivityResumed(Activity activity) {
+        currentActivity = activity;
+    }
+
+    @Override
+    public void onActivityPaused(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityStopped(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+    }
+
+    @Override
+    public void onActivityDestroyed(Activity activity) {
+
+    }
+
+    public Activity getCurrentActivity() {
+        return currentActivity;
     }
 
 }

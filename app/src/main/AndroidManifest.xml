@@ -4,6 +4,9 @@
     package="com.gnoemes.bubblenotes"
     >
 
+    <!-- For Object Browser -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="com.gnoemes.bubblenotes.App"
         android:icon="@mipmap/ic_launcher"

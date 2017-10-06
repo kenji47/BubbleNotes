@@ -19,4 +19,7 @@ public interface NotesListView extends MvpView {
 
     @StateStrategyType(SkipStrategy.class)
     void showMessage(String msg);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setProgressIndicator(boolean refreshing);
 }

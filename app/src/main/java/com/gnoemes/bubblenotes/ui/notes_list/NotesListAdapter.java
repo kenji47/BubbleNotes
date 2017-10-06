@@ -84,6 +84,7 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
     //TODO make Holder class static
     public class NoteHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //Note entity
+        public View view;
         TextView name;
         CheckBox isComplete;
 
@@ -95,6 +96,7 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
 
         public NoteHolder(View itemView) {
             super(itemView);
+            view = itemView;
             name = itemView.findViewById(R.id.nameTextView);
             isComplete = itemView.findViewById(R.id.completeCheckBox);
             priority = itemView.findViewById(R.id.priorityTextView);

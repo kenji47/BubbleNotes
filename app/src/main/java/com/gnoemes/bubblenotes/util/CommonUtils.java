@@ -19,14 +19,14 @@ public class CommonUtils {
     private static List<String> priorityNames;
 
     public static void longOperation() {
-        try {
-            for (int i = 1; i < 6; i++) {
-                Timber.d("Sleep " + i);
-                TimeUnit.SECONDS.sleep(1);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            for (int i = 1; i < 6; i++) {
+//                Timber.d("Sleep " + i);
+//                TimeUnit.SECONDS.sleep(1);
+//            }
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static List<String> getPriorityNames(Resources resources) {

@@ -2,7 +2,6 @@ package com.gnoemes.bubblenotes.ui.note_detail;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,12 +23,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.gnoemes.bubblenotes.App;
 import com.gnoemes.bubblenotes.R;
-import com.gnoemes.bubblenotes.repo.local.LocalRepositoryImpl;
 import com.gnoemes.bubblenotes.repo.local.RepoDi;
 import com.gnoemes.bubblenotes.repo.model.Comment;
 import com.gnoemes.bubblenotes.repo.model.Description;
 import com.gnoemes.bubblenotes.repo.model.Note;
-import com.gnoemes.bubblenotes.ui.notes_list.NotesDiff;
 import com.gnoemes.bubblenotes.util.CommonUtils;
 
 
@@ -40,7 +37,6 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -60,9 +56,9 @@ public class NoteDetailActivity extends MvpAppCompatActivity implements NoteDeta
     Note note;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.progressBar) ProgressBar progressBar;
+    @BindView(R.id.loadNoteProgressBar) ProgressBar progressBar;
     @BindView(R.id.idTextView) TextView idTextView;
-    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.saveNoteFab) FloatingActionButton fab;
     @BindView(R.id.nameEditText) EditText nameEditText;
     @BindView(R.id.descriptionEditText) EditText descriptionEditText;
     @BindView(R.id.prioritySpinner) Spinner prioritySpinner;
@@ -244,7 +240,7 @@ public class NoteDetailActivity extends MvpAppCompatActivity implements NoteDeta
         if (refreshing) {
             progressBar.setVisibility(View.VISIBLE);
         } else {
-            progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.INVISIBLE);
         }
     }
 

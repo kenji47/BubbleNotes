@@ -5,7 +5,7 @@ import com.arellomobile.mvp.MvpPresenter;
 import com.gnoemes.bubblenotes.repo.local.LocalRepository;
 import com.gnoemes.bubblenotes.repo.local.LocalRepositoryImpl;
 import com.gnoemes.bubblenotes.repo.model.Note;
-import com.gnoemes.bubblenotes.util.EspressoIdlingResource;
+
 
 import io.reactivex.Scheduler;
 import timber.log.Timber;
@@ -38,65 +38,64 @@ public class NoteDetailPresenter extends MvpPresenter<NoteDetailView> {
 
     public void getNote(long id) {
         Timber.d("getNote");
-        EspressoIdlingResource.increment();
+        getViewState().setProgressIndicator(true);
         localRepositoryBox.getNote(id)
                 .subscribeOn(io)
                 .observeOn(main)
                 .subscribe(note -> {
                     getViewState().setNote(note);
-                    EspressoIdlingResource.decrement();
+                    getViewState().setProgressIndicator(false);
                 }, throwable -> {
+                    getViewState().setProgressIndicator(false);
                     getViewState().showToast("Error " + throwable);
                     throwable.printStackTrace();
-                    EspressoIdlingResource.decrement();
+
                 });
     }
 
     public void addNote(Note note) {
-        EspressoIdlingResource.increment();
-
+        getViewState().setProgressIndicator(true);
         localRepositoryBox.addNote(note)
                 .subscribeOn(io)
                 .observeOn(main)
                 .subscribe(id -> {
                     Timber.d("addNote onNext");
-                    EspressoIdlingResource.decrement();
-
+                    getViewState().setProgressIndicator(false);
                     getViewState().showToast("Note added " + id);
                     getViewState().backPressed();
                 }, throwable -> {
                     Timber.d("addNote onError " + throwable);
-                    EspressoIdlingResource.decrement();
+                    getViewState().setProgressIndicator(false);
                 }, () -> {});
     }
 
     public void updateNote(Note note) {
-        EspressoIdlingResource.increment();
+        getViewState().setProgressIndicator(true);
         localRepositoryBox.UpdateNote(note)
                 .subscribeOn(io)
                 .observeOn(main)
                 .subscribe(id -> {
                     Timber.d("UpdateNote onNext");
-                    EspressoIdlingResource.decrement();
+                    getViewState().setProgressIndicator(false);
                     getViewState().showToast("Note updated " + id);
                     getViewState().backPressed();
                 }, throwable -> {
-                    EspressoIdlingResource.decrement();
+                    getViewState().setProgressIndicator(false);
                     Timber.d("UpdateNote onError " + throwable);
                 }, () -> {});
     }
 
     public void deleteNote(long id) {
-        EspressoIdlingResource.increment();
+        getViewState().setProgressIndicator(true);
         localRepositoryBox.deleteNote(id)
                 .subscribeOn(io)
                 .observeOn(main)
                 .subscribe(aBoolean -> {
-                    EspressoIdlingResource.decrement();
+                    getViewState().setProgressIndicator(false);
                     getViewState().showToast("Note deleted " + id);
                     getViewState().backPressed();
                 }, throwable -> {
-                    EspressoIdlingResource.decrement();
+                    getViewState().setProgressIndicator(false);
                 }, () -> {
 
                 });
